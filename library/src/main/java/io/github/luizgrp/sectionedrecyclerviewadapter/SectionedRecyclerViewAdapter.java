@@ -590,6 +590,32 @@ public class SectionedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         throw new IndexOutOfBoundsException("Invalid position");
     }
 
+    public int getPositionInSectionIncludeHeaderAndFooter(final int position) {
+        int currentPos = 0;
+
+        for (final Map.Entry<String, Section> entry : sections.entrySet()) {
+            final Section section = entry.getValue();
+
+            // ignore invisible sections
+            if (!section.isVisible()) {
+                continue;
+            }
+
+            final int sectionTotal = section.getSectionItemsTotal();
+
+            // check if position is in this section
+            if (position >= currentPos && position <= (currentPos + sectionTotal - 1)) {
+                final int result = position - currentPos - (section.hasHeader() ? 1 : 0);
+                return result;
+            }
+
+            currentPos += sectionTotal;
+        }
+
+        throw new IndexOutOfBoundsException("Invalid position");
+    }
+
+
     /**
      * Return the map with all sections.
      * Should only be used by the library itself.
@@ -684,4 +710,37 @@ public class SectionedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
         return section;
     }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
+        int adapterPosition = holder.getAdapterPosition();
+        if(adapterPosition != RecyclerView.NO_POSITION){
+            Section section = getSectionForPosition(adapterPosition);
+            int position = getPositionInSectionIncludeHeaderAndFooter(adapterPosition);
+            if(position == -1){
+                section.onHeaderViewHolderAttachedToWindow(holder);
+            }else if(position == section.getContentItemsTotal()){
+                section.onFooterViewHolderAttachedToWindow(holder);
+            }else{
+                section.onItemViewHolderAttachedToWindow(holder, position);
+            }
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+        int adapterPosition = holder.getAdapterPosition();
+        if(adapterPosition != RecyclerView.NO_POSITION){
+            Section section = getSectionForPosition(adapterPosition);
+            int position = getPositionInSectionIncludeHeaderAndFooter(adapterPosition);
+            if(position == -1){
+                section.onHeaderViewHolderDetachedFromWindow(holder);
+            }else if(position == section.getContentItemsTotal()){
+                section.onFooterViewHolderDetachedFromWindow(holder);
+            }else{
+                section.onItemViewHolderDetachedFromWindow(holder, position);
+            }
+        }
+    }
+
 }

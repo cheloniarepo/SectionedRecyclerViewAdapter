@@ -582,4 +582,13 @@ public abstract class Section {
                                       @SuppressWarnings("unused") final List<Object> payloads) {
         this.onBindEmptyViewHolder(holder);
     }
+
+
+    public void onHeaderViewHolderAttachedToWindow(final RecyclerView.ViewHolder holder) { }
+    public void onItemViewHolderAttachedToWindow(final RecyclerView.ViewHolder holder, final int position) { }
+    public void onFooterViewHolderAttachedToWindow(final RecyclerView.ViewHolder holder) { }
+    public void onHeaderViewHolderDetachedFromWindow(final RecyclerView.ViewHolder holder) { }
+    public void onItemViewHolderDetachedFromWindow(final RecyclerView.ViewHolder holder, final int position) { }
+    public void onFooterViewHolderDetachedFromWindow(final RecyclerView.ViewHolder holder) { }
+
 }
