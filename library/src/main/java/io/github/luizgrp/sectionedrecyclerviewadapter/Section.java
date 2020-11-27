@@ -590,5 +590,7 @@ public abstract class Section {
     public void onHeaderViewHolderDetachedFromWindow(final RecyclerView.ViewHolder holder) { }
     public void onItemViewHolderDetachedFromWindow(final RecyclerView.ViewHolder holder, final int position) { }
     public void onFooterViewHolderDetachedFromWindow(final RecyclerView.ViewHolder holder) { }
-
+    public void onHeaderViewHolderRecycled(final RecyclerView.ViewHolder holder) { }
+    public void onItemViewHolderRecycled(final RecyclerView.ViewHolder holder, final int position) { }
+    public void onFooterViewHolderRecycled(final RecyclerView.ViewHolder holder) { }
 }

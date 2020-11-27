@@ -713,6 +713,7 @@ public class SectionedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
         int adapterPosition = holder.getAdapterPosition();
         if(adapterPosition != RecyclerView.NO_POSITION){
             Section section = getSectionForPosition(adapterPosition);
@@ -729,6 +730,7 @@ public class SectionedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
         int adapterPosition = holder.getAdapterPosition();
         if(adapterPosition != RecyclerView.NO_POSITION){
             Section section = getSectionForPosition(adapterPosition);
@@ -743,4 +745,20 @@ public class SectionedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         }
     }
 
+    @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        int adapterPosition = holder.getAdapterPosition();
+        if(adapterPosition != RecyclerView.NO_POSITION){
+            Section section = getSectionForPosition(adapterPosition);
+            int position = getPositionInSectionIncludeHeaderAndFooter(adapterPosition);
+            if(position == -1){
+                section.onHeaderViewHolderRecycled(holder);
+            }else if(position == section.getContentItemsTotal()){
+                section.onFooterViewHolderRecycled(holder);
+            }else{
+                section.onItemViewHolderRecycled(holder, position);
+            }
+        }
+    }
 }
